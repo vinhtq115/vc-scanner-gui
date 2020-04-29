@@ -1,0 +1,18 @@
+int foo(int i, int j) {
+	return i * j;
+}
+
+int k = 0;
+
+int main() {
+	int i = 3;
+	int j = 5 * 9;
+	float a = 3.02;
+	k = foo(i, j);
+	boolean oo;
+	if (i > 0)
+		if (i < 10)
+			oo = true;
+		else
+			oo = false;
+}
