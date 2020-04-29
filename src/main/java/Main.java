@@ -1,6 +1,8 @@
 import java.io.*;
 
 public class Main {
+    public static String Result ;
+
     /**
      * Get token name
      * @param token: Token constant
@@ -21,6 +23,14 @@ public class Main {
         return "UNKNOWN TOKEN";
     }
 
+    public static String getResult() {
+        return Result;
+    }
+
+    public static void setResult(String result) {
+        Result = result;
+    }
+
     /**
      * Scan file and output its token and identifier/classifier.
      * @param input_file_name: Path to input file
@@ -38,6 +48,7 @@ public class Main {
             Reader reader = new InputStreamReader(stream, java.nio.charset.StandardCharsets.US_ASCII);
             scanner = new Scanner(reader);
             while (!scanner.yyatEOF()) {
+
                 VCSymbol s = (VCSymbol) scanner.next_token();
                 if (s.sym == 0) { // Reached end of file
                     break;
@@ -49,6 +60,7 @@ public class Main {
 
                 // Output
                 String output = tokenName + tab + s.getCharacters();
+                Result += output + "\n";
                 // Print
                 System.out.println(output);
                 // Write to file
@@ -63,7 +75,7 @@ public class Main {
             throw new FileNotFoundException("File not found: \"" + input_file_name + "\"");
         } catch (IOException e) {
             throw new IOException("IO error scanning file \"" + input_file_name + "\"", e);
-        } catch (Exception e) {
+        } catch (java.lang.Exception e) {
             throw new Exception("Unexpected exception:", e);
         }
     }

@@ -21,10 +21,10 @@ public class parser extends lr_parser {
 
   /** Constructor which sets the default scanner. */
   @Deprecated
-  public parser(Scanner s) {super(s);}
+  public parser(java_cup.runtime.Scanner s) {super(s);}
 
   /** Constructor which sets the default scanner. */
-  public parser(Scanner s, SymbolFactory sf) {super(s,sf);}
+  public parser(java_cup.runtime.Scanner s, SymbolFactory sf) {super(s,sf);}
 
   /** Production table. */
   protected static final short _production_table[][] = 
