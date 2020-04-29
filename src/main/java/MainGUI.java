@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,54 +32,45 @@ public class MainGUI {
         Import.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                FileNameExtensionFilter filter = new FileNameExtensionFilter( "VC source code (.vc)", "vc");
                 JFileChooser ImportFile = new JFileChooser();
+                ImportFile.setFileFilter(filter);
 
                 int select = ImportFile.showOpenDialog(null);
                 if (select == JFileChooser.APPROVE_OPTION) {
                     String FileName = ImportFile.getSelectedFile().getName() ;
-                    if (!(FileName.endsWith("vc")))
-                    {
-                        ToastMessage message = new ToastMessage(" This file is not acceptable!");
-                        message.display() ;
-                    } else {
-
-                        String dir = ImportFile.getCurrentDirectory().toString();
-                        FileAnalyse = dir + "\\" + FileName;
-                        ToastMessage message = new ToastMessage("You open " + ImportFile.getSelectedFile().getName());
-                        message.display();
+                    String dir = ImportFile.getCurrentDirectory().toString();
+                    FileAnalyse = dir + "\\" + FileName;
+                    ToastMessage message = new ToastMessage("You opened " + ImportFile.getSelectedFile().getName());
+                    message.display();
 
 
-                        // show code input :
+                    // show code input :
 
-                        String Content = "" ;
-                        BufferedReader br = null;
+                    String Content = "" ;
+                    BufferedReader br = null;
+                    try {
+
+                        br = new BufferedReader(new FileReader(FileAnalyse));
+                        String textInALine = br.readLine();
+                        while (textInALine  != null) {
+
+                            Content += textInALine +"\n" ;
+                            textInALine = br.readLine();
+
+                        }
+                    } catch (IOException a) {
+                        a.printStackTrace();
+                    } finally {
                         try {
-
-                            br = new BufferedReader(new FileReader(FileAnalyse));
-                            String textInALine = br.readLine();
-                            while (textInALine  != null) {
-
-                                Content += textInALine +"\n" ;
-                                textInALine = br.readLine();
-
-                            }
+                            br.close();
                         } catch (IOException a) {
                             a.printStackTrace();
-                        } finally {
-                            try {
-                                br.close();
-                            } catch (IOException a) {
-                                a.printStackTrace();
-                            }
                         }
-
-                        CodeInput.setText("");
-                        CodeInput.setText(Content);
-
                     }
-                } else {
-                    ToastMessage message = new ToastMessage("You cancelled open!");
-                    message.display() ;
+
+                    CodeInput.setText("");
+                    CodeInput.setText(Content);
                 }
             }
         });
@@ -86,16 +78,20 @@ public class MainGUI {
         Export.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                // Set extension to txt
+                FileNameExtensionFilter filter = new FileNameExtensionFilter( "Text File (.txt)", "txt");
                 JFileChooser SaveFile = new JFileChooser();
+                SaveFile.setFileFilter(filter);
+                SaveFile.setAcceptAllFileFilterUsed(false);
 
                 int select = SaveFile.showSaveDialog(null);
                 if (select == JFileChooser.APPROVE_OPTION) {
                     String FileName = SaveFile.getSelectedFile().getName();
+                    if (!FileName.endsWith(".txt")) {
+                        FileName = FileName + ".txt";
+                    }
                     String dir = SaveFile.getCurrentDirectory().toString();
                     FileSave = dir + "\\" + FileName;
-                } else {
-
                 }
 
             }
@@ -113,7 +109,7 @@ public class MainGUI {
                         Result.setText(tool.Result);
                         tool.setResult("");
                     } else {
-                        ToastMessage message = new ToastMessage("You need to setting import and export path!");
+                        ToastMessage message = new ToastMessage("You need to set both import and export path!");
                         message.display() ;
                     }
                 } catch (Exception ex) {
@@ -126,7 +122,7 @@ public class MainGUI {
 
     public static void main(String[] args )
     {
-        JFrame GUI = new JFrame("MainGUI") ;
+        JFrame GUI = new JFrame("VC Scanner") ;
         GUI.setResizable(false);
         GUI.setContentPane(new MainGUI().Panel);
         GUI.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

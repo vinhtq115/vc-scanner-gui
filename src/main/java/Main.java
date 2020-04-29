@@ -67,8 +67,6 @@ public class Main {
                 bufferedWriter.write(output);
                 bufferedWriter.newLine();
             }
-            System.out.println("\n--- End of file ---");
-            bufferedWriter.write("\n--- End of file ---");
             bufferedWriter.close();
             writer.close();
         } catch (FileNotFoundException e) {
